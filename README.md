@@ -14,8 +14,6 @@ First things first `go get github.com/shaned24/crabbot-discord/crabbot`
 
 ## Usage
 
-Implementing a route is simple 
-
 #### Implement the `crabbot.RouteHandler` interface:
 
 **myroute.go**
