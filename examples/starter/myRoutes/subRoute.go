@@ -24,7 +24,7 @@ func (u *SubRoute) SetDescription(router *exrouter.Route) *dgrouter.Route {
 }
 
 func (u *SubRoute) Handle(ctx *exrouter.Context) {
-	_, err := ctx.Reply("This is a sub route you gom " + ctx.Msg.Author.Username)
+	_, err := ctx.Reply("This is a sub route." + ctx.Msg.Author.Username)
 	if err != nil {
 		log.Printf("Something went wrong: %v", err)
 	}

@@ -21,35 +21,38 @@ First things first `go get github.com/shaned24/crabbot-discord/crabbot`
 
 // Interface declaration
 type RouteHandler interface {
-	Register(router *exrouter.Route)
+	Register(router *exrouter.Route) *exrouter.Route
 	Handle(ctx *exrouter.Context)
 	GetRouteCommand() string
-	GetDescription() string
+	GetSubRoutes() []RouteHandler
+	SetDescription(router *exrouter.Route) *dgrouter.Route
 }
-
 ...
 
 // Implementation of the RouteHandler interface
-type MyRoute struct {
-	router *exrouter.Route
+type MyRoute struct{}
+
+func (u *MyRoute) Register(router *exrouter.Route) *exrouter.Route {
+	return router.On(u.GetRouteCommand(), u.Handle)
 }
 
-func (h *MyRoute) Handle(ctx *exrouter.Context) {
-	// implement handler
+func (u *MyRoute) GetSubRoutes() []crabbot.RouteHandler {
+	return nil
 }
 
-func (h *MyRoute) GetRouteCommand() string {
-	// We need to return the string that will trigger our handle function
-	return "myroute"
+func (u *MyRoute) SetDescription(router *exrouter.Route) *dgrouter.Route {
+	return router.Desc("this is an example of using sub routes")
 }
 
-func (h *MyRoute) GetDescription() string {
-	// We can add a description 
-	return "Does something after calling myroute"
+func (u *MyRoute) Handle(ctx *exrouter.Context) {
+	_, err := ctx.Reply("This is a sub route." + ctx.Msg.Author.Username)
+	if err != nil {
+		log.Printf("Something went wrong: %v", err)
+	}
 }
 
-func (h *MyRoute) Register(router *exrouter.Route) {
-	router.On(h.GetRouteCommand(), h.Handle).Desc(h.GetDescription())
+func (u *MyRoute) GetRouteCommand() string {
+	return "sub"
 }
 
 func NewMyRoute() *MyRoute {
@@ -89,7 +92,6 @@ package main
 import (
 	"flag"
 	"github.com/shaned24/crabbot-discord/crabbot"
-	"github.com/shaned24/crabbot-discord/crabbot/routes"
 	"github.com/shaned24/crabbot-discord/examples/starter/myRoutes"
 	"log"
 	"os"
@@ -99,7 +101,7 @@ import (
 
 // Variables used for command line parameters
 var (
-	Token string
+	Token  string
 	Prefix string
 )
 
@@ -109,15 +111,14 @@ func init() {
 	flag.Parse()
 }
 
-
 func main() {
-	// Create our routes
 	handlers := []crabbot.RouteHandler{
-		routes.NewHelp(),
+		myRoutes.NewSubRoute(),
+		myRoutes.NewPing(),
+		myRoutes.NewAvatar(),
+		myRoutes.NewUser(),
 	}
-    
-	
-	// Create our bot session
+
 	bot, err := crabbot.NewBot(Token, Prefix, handlers...)
 	if err != nil {
 		log.Println("error creating Bot session,", err)
@@ -125,7 +126,6 @@ func main() {
 
 	defer bot.Close()
 
-    // Start the bot
 	err = bot.Start()
 	if err != nil {
 		log.Printf("Couldn't start the bot: %v", err)
