@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"github.com/shaned24/crabbot-discord/crabbot"
-	"github.com/shaned24/crabbot-discord/crabbot/routes"
 	"github.com/shaned24/crabbot-discord/examples/starter/myRoutes"
 	"log"
 	"os"
@@ -13,7 +12,7 @@ import (
 
 // Variables used for command line parameters
 var (
-	Token string
+	Token  string
 	Prefix string
 )
 
@@ -23,10 +22,9 @@ func init() {
 	flag.Parse()
 }
 
-
 func main() {
 	handlers := []crabbot.RouteHandler{
-		routes.NewHelp(),
+		myRoutes.NewSubRoute(),
 		myRoutes.NewPing(),
 		myRoutes.NewAvatar(),
 		myRoutes.NewUser(),
