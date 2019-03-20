@@ -1,9 +1,7 @@
 package myRoutes
 
 import (
-	"github.com/Necroforger/dgrouter"
 	"github.com/Necroforger/dgrouter/exrouter"
-	"github.com/shaned24/crabbot-discord/crabbot"
 	"log"
 )
 
@@ -14,10 +12,6 @@ type Ping struct{}
 
 func (p *Ping) Register(router *exrouter.Route) *exrouter.Route {
 	return router.On(p.GetRouteCommand(), p.Handle)
-}
-
-func (p *Ping) GetSubRoutes() []crabbot.RouteHandler {
-	return nil
 }
 
 func (p *Ping) Handle(ctx *exrouter.Context) {
@@ -31,8 +25,8 @@ func (p *Ping) GetRouteCommand() string {
 	return pingRoute
 }
 
-func (p *Ping) SetDescription(router *exrouter.Route) *dgrouter.Route {
-	return router.Desc(pingDescription)
+func (p *Ping) GetDescription() string {
+	return pingDescription
 }
 
 func NewPing() *Ping {

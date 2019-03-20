@@ -1,7 +1,6 @@
 package myRoutes
 
 import (
-	"github.com/Necroforger/dgrouter"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/shaned24/crabbot-discord/crabbot"
 	"log"
@@ -19,8 +18,8 @@ func (u *SubRoute) GetSubRoutes() []crabbot.RouteHandler {
 	}
 }
 
-func (u *SubRoute) SetDescription(router *exrouter.Route) *dgrouter.Route {
-	return router.Desc("this is an example of using sub routes")
+func (u *SubRoute) GetDescription() string {
+	return "this is an example of using sub routes"
 }
 
 func (u *SubRoute) Handle(ctx *exrouter.Context) {

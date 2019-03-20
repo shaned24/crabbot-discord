@@ -17,7 +17,7 @@ func (b *Bot) registerRoutes(dg *discordgo.Session, routeHandlers ...RouteHandle
 
 	RegisterRoutes(
 		router,
-		routeHandlers...
+		routeHandlers...,
 	)
 
 	// Add message handler

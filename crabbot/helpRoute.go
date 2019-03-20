@@ -3,7 +3,6 @@ package crabbot
 import (
 	"bytes"
 	"fmt"
-	"github.com/Necroforger/dgrouter"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/olekukonko/tablewriter"
 	"log"
@@ -36,8 +35,8 @@ func (h *Help) GetRouteCommand() string {
 	return "help"
 }
 
-func (h *Help) SetDescription(router *exrouter.Route) *dgrouter.Route {
-	return router.Desc("prints this help menu")
+func (h *Help) GetDescription() string {
+	return "prints this help menu"
 }
 
 func (h *Help) Register(router *exrouter.Route) *exrouter.Route {
