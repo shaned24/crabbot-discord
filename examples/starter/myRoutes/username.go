@@ -6,10 +6,14 @@ import (
 	"log"
 )
 
-type User struct {}
+type User struct{}
 
-func (u *User) Register(router *exrouter.Route) {
-	router.OnMatch("username", dgrouter.NewRegexMatcher("user(name)?"), u.Handle).Desc(u.GetDescription())
+func (u *User) Register(router *exrouter.Route) *exrouter.Route {
+	return router.OnMatch("username", dgrouter.NewRegexMatcher("user(name)?"), u.Handle)
+}
+
+func (u *User) GetDescription() string {
+	return "returns the users username"
 }
 
 func (u *User) Handle(ctx *exrouter.Context) {
@@ -21,10 +25,6 @@ func (u *User) Handle(ctx *exrouter.Context) {
 
 func (u *User) GetRouteCommand() string {
 	return "user(name)"
-}
-
-func (u *User) GetDescription() string {
-	return "returns the users username"
 }
 
 func NewUser() *User {

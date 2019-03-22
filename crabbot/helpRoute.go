@@ -1,7 +1,8 @@
-package routes
+package crabbot
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/olekukonko/tablewriter"
 	"log"
@@ -12,7 +13,16 @@ type Help struct {
 }
 
 func (h *Help) Handle(ctx *exrouter.Context) {
-	helpMessage := "## Help\n\nBelow are the commands:\n\n"
+	var helpMessage string
+
+	if h.router.Name != "" {
+		helpMessage = fmt.Sprintf("## Help\n\nBelow are the commands for: %s\n\n", h.router.Name)
+
+	} else {
+		helpMessage = "## Help\n\nBelow are the root commands \n\n"
+
+	}
+
 	table := h.renderMarkDownTable()
 
 	_, err := ctx.Reply("```" + helpMessage + table + "```")
@@ -29,9 +39,9 @@ func (h *Help) GetDescription() string {
 	return "prints this help menu"
 }
 
-func (h *Help) Register(router *exrouter.Route) {
+func (h *Help) Register(router *exrouter.Route) *exrouter.Route {
 	h.router = router
-	router.On(h.GetRouteCommand(), h.Handle).Desc(h.GetDescription())
+	return router.On(h.GetRouteCommand(), h.Handle)
 }
 
 func (h *Help) renderMarkDownTable() string {
@@ -47,13 +57,18 @@ func (h *Help) renderMarkDownTable() string {
 	buffer := new(bytes.Buffer)
 
 	table := tablewriter.NewWriter(buffer)
-	table.SetHeader([]string{"Command Name", "Description"})
+	table.SetHeader([]string{"Command Name", "Command Description"})
+	table.SetColWidth(40)
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 	table.SetCenterSeparator("|")
 	table.AppendBulk(tableData) // Add Bulk Data
 	table.Render()
 
 	return buffer.String()
+}
+
+func (h *Help) GetSubRoutes() []Route {
+	return nil
 }
 
 func NewHelp() *Help {

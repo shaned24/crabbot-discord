@@ -6,18 +6,18 @@ import (
 )
 
 type Bot struct {
-	Token         string
-	Prefix        string
-	RouteHandlers []RouteHandler
-	Session       *discordgo.Session
+	Token   string
+	Prefix  string
+	Routes  []Route
+	Session *discordgo.Session
 }
 
-func (b *Bot) registerRoutes(dg *discordgo.Session, routeHandlers ...RouteHandler) {
+func (b *Bot) registerRoutes(dg *discordgo.Session, Routes ...Route) {
 	router := exrouter.New()
 
 	RegisterRoutes(
 		router,
-		routeHandlers...
+		Routes...,
 	)
 
 	// Add message handler
@@ -26,20 +26,20 @@ func (b *Bot) registerRoutes(dg *discordgo.Session, routeHandlers ...RouteHandle
 	})
 }
 
-func NewBot(token string, prefix string, routeHandlers ...RouteHandler) (*Bot, error) {
+func NewBot(token string, prefix string, Routes ...Route) (*Bot, error) {
 	dgSession, err := discordgo.New("Bot " + token)
 	if err != nil {
 		return nil, err
 	}
 
 	bot := &Bot{
-		Token:         token,
-		Prefix:        prefix,
-		RouteHandlers: routeHandlers,
-		Session:       dgSession,
+		Token:   token,
+		Prefix:  prefix,
+		Routes:  Routes,
+		Session: dgSession,
 	}
 
-	bot.registerRoutes(bot.Session, routeHandlers...)
+	bot.registerRoutes(bot.Session, Routes...)
 
 	return bot, nil
 }

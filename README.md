@@ -14,128 +14,67 @@ First things first `go get github.com/shaned24/crabbot-discord/crabbot`
 
 ## Usage
 
-#### Implement the `crabbot.RouteHandler` interface:
+In a discord chat lets say you want your bot to respond to a `!ping` that was typed in a chatroom
 
-**myroute.go**
+#### Implement the `crabbot.Route` interface:
 ```go
-
 // Interface declaration
-type RouteHandler interface {
-	Register(router *exrouter.Route)
+type Route interface {
+	Register(router *exrouter.Route) *exrouter.Route
 	Handle(ctx *exrouter.Context)
 	GetRouteCommand() string
-	GetDescription() string
-}
-
-...
-
-// Implementation of the RouteHandler interface
-type MyRoute struct {
-	router *exrouter.Route
-}
-
-func (h *MyRoute) Handle(ctx *exrouter.Context) {
-	// implement handler
-}
-
-func (h *MyRoute) GetRouteCommand() string {
-	// We need to return the string that will trigger our handle function
-	return "myroute"
-}
-
-func (h *MyRoute) GetDescription() string {
-	// We can add a description 
-	return "Does something after calling myroute"
-}
-
-func (h *MyRoute) Register(router *exrouter.Route) {
-	router.On(h.GetRouteCommand(), h.Handle).Desc(h.GetDescription())
-}
-
-func NewMyRoute() *MyRoute {
-	return &MyRoute{}
+	GetDescription(router *exrouter.Route) string
 }
 ```
 
-#### Add our implementation to a `[]RouteHandler`
-
-Add the implementation to an array of `[]RouteHandler` and pass the array into the `crabbot.NewBot` function
-
-**main.go**
+#### Sample implementation
 ```go
-...
+type PingRoute struct{}
 
+func (u *PingRoute) Register(router *exrouter.Route) *exrouter.Route {
+	return router.On(u.GetRouteCommand(), u.Handle)
+}
+
+func (u *PingRoute) GetDescription(router *exrouter.Route) string {
+	return "This will respond with Pong!"
+}
+
+func (u *PingRoute) Handle(ctx *exrouter.Context) {
+	ctx.Reply("Pong!")
+}
+
+func (u *PingRoute) GetRouteCommand() string {
+	return "ping"
+}
+
+func NewPingRoute() *PingRoute {
+	return &PingRoute{}
+}
+```
+
+#### Example
+
+```go
 func main() {
     token := "my-bot-token"
     prefix := "!"
-	
-    // Create our routes
-    handlers := []crabbot.RouteHandler{
-        routes.MyRoute(),
-    }
     
-    bot, err := crabbot.NewBot(token, prefix, handlers...)
-    ...
+    // Create the bot instance
+    bot, err := crabbot.NewBot(Token, Prefix, NewPingRoute())
+    if err != nil {
+        log.Println("error creating Bot session,", err)
+    }
+
+    defer bot.Close()
+    err = bot.Start()
+    
+    // Wait here until CTRL-C or other term signal is received.
+    log.Println("Bot is now running. Press CTRL-C to exit.")
+    sc := make(chan os.Signal, 1)
+    signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+    <-sc
 }
 ```
-
 
 ## Examples
-
-- Examples can be found in the [./examples](https://github.com/shaned24/crabbot-discord/tree/master/examples/) directory
-```go
-package main
-
-import (
-	"flag"
-	"github.com/shaned24/crabbot-discord/crabbot"
-	"github.com/shaned24/crabbot-discord/crabbot/routes"
-	"github.com/shaned24/crabbot-discord/examples/starter/myRoutes"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-)
-
-// Variables used for command line parameters
-var (
-	Token string
-	Prefix string
-)
-
-func init() {
-	flag.StringVar(&Token, "t", "", "Bot token")
-	flag.StringVar(&Prefix, "p", "!", "Bot Prefix")
-	flag.Parse()
-}
-
-
-func main() {
-	// Create our routes
-	handlers := []crabbot.RouteHandler{
-		routes.NewHelp(),
-	}
-    
-	
-	// Create our bot session
-	bot, err := crabbot.NewBot(Token, Prefix, handlers...)
-	if err != nil {
-		log.Println("error creating Bot session,", err)
-	}
-
-	defer bot.Close()
-
-    // Start the bot
-	err = bot.Start()
-	if err != nil {
-		log.Printf("Couldn't start the bot: %v", err)
-		return
-	}
-
-	// Wait here until CTRL-C or other term signal is received.
-	log.Println("Bot is now running.  Press CTRL-C to exit.")
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
-	<-sc
-}
-```
+More examples can be found in the [examples](https://github.com/shaned24/crabbot-discord/tree/master/examples/) directory

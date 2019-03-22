@@ -8,10 +8,14 @@ import (
 const avatarRoute = "avatar"
 const avatarDescription = "returns the user's avatar"
 
-type Avatar struct {}
+type Avatar struct{}
 
-func (a *Avatar) Register(router *exrouter.Route) {
-	router.On(avatarRoute, a.Handle).Desc(avatarDescription)
+func (a *Avatar) GetDescription() string {
+	return avatarDescription
+}
+
+func (a *Avatar) Register(router *exrouter.Route) *exrouter.Route {
+	return router.On(avatarRoute, a.Handle)
 }
 
 func (a *Avatar) Handle(ctx *exrouter.Context) {
@@ -25,13 +29,6 @@ func (a *Avatar) GetRouteCommand() string {
 	return avatarRoute
 }
 
-func (a *Avatar) GetDescription() string {
-	return avatarDescription
-}
-
 func NewAvatar() *Avatar {
 	return &Avatar{}
 }
-
-
-

@@ -10,8 +10,8 @@ const pingDescription = "responds with pong"
 
 type Ping struct{}
 
-func (p *Ping) Register(router *exrouter.Route) {
-	router.On(p.GetRouteCommand(), p.Handle).Desc(pingDescription)
+func (p *Ping) Register(router *exrouter.Route) *exrouter.Route {
+	return router.On(p.GetRouteCommand(), p.Handle)
 }
 
 func (p *Ping) Handle(ctx *exrouter.Context) {
