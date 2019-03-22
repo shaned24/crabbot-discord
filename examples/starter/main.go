@@ -23,14 +23,15 @@ func init() {
 }
 
 func main() {
-	handlers := []crabbot.RouteHandler{
+	bot, err := crabbot.NewBot(
+		Token,
+		Prefix,
 		myRoutes.NewSubRoute(),
 		myRoutes.NewPing(),
 		myRoutes.NewAvatar(),
 		myRoutes.NewUser(),
-	}
+	)
 
-	bot, err := crabbot.NewBot(Token, Prefix, handlers...)
 	if err != nil {
 		log.Println("error creating Bot session,", err)
 	}

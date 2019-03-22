@@ -6,33 +6,33 @@ import (
 	"log"
 )
 
-type SubRoute struct{}
+type ExampleSubRoute struct{}
 
-func (u *SubRoute) Register(router *exrouter.Route) *exrouter.Route {
+func (u *ExampleSubRoute) Register(router *exrouter.Route) *exrouter.Route {
 	return router.On(u.GetRouteCommand(), u.Handle)
 }
 
-func (u *SubRoute) GetSubRoutes() []crabbot.RouteHandler {
-	return []crabbot.RouteHandler{
+func (u *ExampleSubRoute) GetSubRoutes() []crabbot.Route {
+	return []crabbot.Route{
 		NewUser(),
 	}
 }
 
-func (u *SubRoute) GetDescription() string {
+func (u *ExampleSubRoute) GetDescription() string {
 	return "this is an example of using sub routes"
 }
 
-func (u *SubRoute) Handle(ctx *exrouter.Context) {
+func (u *ExampleSubRoute) Handle(ctx *exrouter.Context) {
 	_, err := ctx.Reply("This is a sub route." + ctx.Msg.Author.Username)
 	if err != nil {
 		log.Printf("Something went wrong: %v", err)
 	}
 }
 
-func (u *SubRoute) GetRouteCommand() string {
+func (u *ExampleSubRoute) GetRouteCommand() string {
 	return "sub"
 }
 
-func NewSubRoute() *SubRoute {
-	return &SubRoute{}
+func NewSubRoute() *ExampleSubRoute {
+	return &ExampleSubRoute{}
 }

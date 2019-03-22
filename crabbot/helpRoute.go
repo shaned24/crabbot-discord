@@ -67,7 +67,7 @@ func (h *Help) renderMarkDownTable() string {
 	return buffer.String()
 }
 
-func (h *Help) GetSubRoutes() []RouteHandler {
+func (h *Help) GetSubRoutes() []Route {
 	return nil
 }
 
