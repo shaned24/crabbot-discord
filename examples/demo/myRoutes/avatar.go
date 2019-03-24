@@ -1,9 +1,7 @@
 package myRoutes
 
 import (
-	"github.com/Necroforger/dgrouter"
 	"github.com/Necroforger/dgrouter/exrouter"
-	"github.com/shaned24/crabbot-discord/crabbot"
 	"log"
 )
 
@@ -12,8 +10,8 @@ const avatarDescription = "returns the user's avatar"
 
 type Avatar struct{}
 
-func (a *Avatar) SetDescription(router *exrouter.Route) *dgrouter.Route {
-	return router.Desc(avatarDescription)
+func (a *Avatar) GetDescription() string {
+	return avatarDescription
 }
 
 func (a *Avatar) Register(router *exrouter.Route) *exrouter.Route {
@@ -29,10 +27,6 @@ func (a *Avatar) Handle(ctx *exrouter.Context) {
 
 func (a *Avatar) GetRouteCommand() string {
 	return avatarRoute
-}
-
-func (a *Avatar) GetSubRoutes() []crabbot.RouteHandler {
-	return nil
 }
 
 func NewAvatar() *Avatar {

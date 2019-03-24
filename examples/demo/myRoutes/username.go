@@ -3,7 +3,6 @@ package myRoutes
 import (
 	"github.com/Necroforger/dgrouter"
 	"github.com/Necroforger/dgrouter/exrouter"
-	"github.com/shaned24/crabbot-discord/crabbot"
 	"log"
 )
 
@@ -13,12 +12,8 @@ func (u *User) Register(router *exrouter.Route) *exrouter.Route {
 	return router.OnMatch("username", dgrouter.NewRegexMatcher("user(name)?"), u.Handle)
 }
 
-func (u *User) GetSubRoutes() []crabbot.RouteHandler {
-	return nil
-}
-
-func (u *User) SetDescription(router *exrouter.Route) *dgrouter.Route {
-	return router.Desc("returns the users username")
+func (u *User) GetDescription() string {
+	return "returns the users username"
 }
 
 func (u *User) Handle(ctx *exrouter.Context) {

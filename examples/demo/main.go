@@ -16,19 +16,22 @@ var (
 	Prefix string
 )
 
-func main() {
+func init() {
 	flag.StringVar(&Token, "t", "", "Bot token")
 	flag.StringVar(&Prefix, "p", "!", "Bot Prefix")
 	flag.Parse()
+}
 
-	handlers := []crabbot.RouteHandler{
+func main() {
+	bot, err := crabbot.NewBot(
+		Token,
+		Prefix,
 		myRoutes.NewSubRoute(),
 		myRoutes.NewPing(),
 		myRoutes.NewAvatar(),
 		myRoutes.NewUser(),
-	}
+	)
 
-	bot, err := crabbot.NewBot(Token, Prefix, handlers...)
 	if err != nil {
 		log.Println("error creating Bot session,", err)
 	}
