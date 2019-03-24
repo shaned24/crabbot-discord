@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/shaned24/crabbot-discord/crabbot"
-	"github.com/shaned24/crabbot-discord/examples/starter/myRoutes"
+	"github.com/shaned24/crabbot-discord/examples/demo/myRoutes"
 	"log"
 	"os"
 	"os/signal"
@@ -16,13 +16,11 @@ var (
 	Prefix string
 )
 
-func init() {
+func main() {
 	flag.StringVar(&Token, "t", "", "Bot token")
 	flag.StringVar(&Prefix, "p", "!", "Bot Prefix")
 	flag.Parse()
-}
 
-func main() {
 	handlers := []crabbot.RouteHandler{
 		myRoutes.NewSubRoute(),
 		myRoutes.NewPing(),
