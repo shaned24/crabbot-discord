@@ -30,6 +30,7 @@ func main() {
 		myRoutes.NewPing(),
 		myRoutes.NewAvatar(),
 		myRoutes.NewUser(),
+		myRoutes.NewDirectMessage(),
 	)
 
 	if err != nil {
