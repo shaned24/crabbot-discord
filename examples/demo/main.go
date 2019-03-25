@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/shaned24/crabbot-discord/crabbot"
-	"github.com/shaned24/crabbot-discord/examples/starter/myRoutes"
+	"github.com/shaned24/crabbot-discord/examples/demo/myRoutes"
 	"log"
 	"os"
 	"os/signal"
