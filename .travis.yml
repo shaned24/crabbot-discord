@@ -2,3 +2,16 @@ services:
   - docker
 
 language: go
+
+stages:
+  - docker-build
+  - docker-publish
+#  - name: deploy
+#    if: branch = master
+
+jobs:
+  include:
+    - stage: docker-build
+      script: make docker-build
+    - stage: docker-publish
+      script: make docker-publish
