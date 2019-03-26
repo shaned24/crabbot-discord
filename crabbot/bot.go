@@ -3,6 +3,7 @@ package crabbot
 import (
 	"github.com/Necroforger/dgrouter/exrouter"
 	"github.com/bwmarrin/discordgo"
+	"log"
 )
 
 type Bot struct {
@@ -22,6 +23,8 @@ func (b *Bot) registerRoutes(dg *discordgo.Session, Routes ...Route) {
 
 	// Add message handler
 	dg.AddHandler(func(_ *discordgo.Session, m *discordgo.MessageCreate) {
+		log.Printf("Message %v", m.Content)
+		log.Printf("Message %v", m.Type)
 		_ = router.FindAndExecute(b.Session, b.Prefix, dg.State.User.ID, m.Message)
 	})
 }

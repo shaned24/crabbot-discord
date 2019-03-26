@@ -6,16 +6,26 @@ import (
 
 // Route is an interface that wraps the exrouter.Route implementation
 //
-// The register function registers a route for a router using the output of the GetRouteCommand function to specify
-// the anchor that will trigger the Handle function when invoked with the string returned from GetRouteCommand
+// The register function registers a route for a router using the output of the GetCommand function to specify
+// the anchor that will trigger the Handle function when invoked with the string returned from GetCommand
 //
 // The output of the GetDescription command should return a short description for that this handler does
 // this description will be used when registering route handlers with the exrouter.Route implementation
 type Route interface {
-	Register(router *exrouter.Route) *exrouter.Route
-	Handle(ctx *exrouter.Context)
-	GetRouteCommand() string
+	// GetCommand return the command that will be used to hook into the router
+	GetCommand() string
+	// GetDescription return a description of your route
 	GetDescription() string
+}
+
+type DefaultRouteHandler interface {
+	// Handle The call back that will be ran when the user inputted command matches a route definition
+	Handle(ctx *exrouter.Context)
+}
+
+type CustomRouteHandler interface {
+	// Register a means to add more in depth routing definitions such as regex matching
+	Register(router *exrouter.Route) *exrouter.Route
 }
 
 // SubRoute is a small extension to the Route
@@ -29,16 +39,24 @@ type SubRoute interface {
 
 // registerHelpHandler Registers a help handler for the passed in router
 func registerHelpHandler(router *exrouter.Route) {
-	handler := NewHelp()
-	helpRoute := handler.Register(router)
-	helpRoute.Desc(handler.GetDescription())
+	route := NewHelp(router)
+	registerRoute(route, router)
 }
 
-// registerRouterWithDescription Attaches a description to the router that will be used for printing help descriptions and usages
-func registerRouterWithDescription(handler Route, router *exrouter.Route) *exrouter.Route {
-	route := handler.Register(router)
-	route.Desc(handler.GetDescription())
-	return route
+// registerRoute Attaches a description to the router that will be used for printing help descriptions and usages
+func registerRoute(route Route, router *exrouter.Route) *exrouter.Route {
+	prefix := route.GetCommand()
+
+	var newRouter *exrouter.Route
+
+	if handlerHandler, ok := route.(DefaultRouteHandler); ok {
+		newRouter = router.On(prefix, handlerHandler.Handle)
+	}
+	if routeHandler, ok := route.(CustomRouteHandler); ok {
+		newRouter = routeHandler.Register(router)
+	}
+	newRouter.Desc(route.GetDescription())
+	return newRouter
 }
 
 // RegisterRoutes Registers all Routes and SubRoutes to the main router passed in
@@ -51,7 +69,7 @@ func RegisterRoutes(router *exrouter.Route, routes ...Route) {
 		registerHelpHandler(router)
 
 		// Register root route
-		rootRouter := registerRouterWithDescription(route, router)
+		rootRouter := registerRoute(route, router)
 
 		// check if the root route as sub routes
 		if subRoute, ok := route.(SubRoute); ok {
@@ -61,7 +79,7 @@ func RegisterRoutes(router *exrouter.Route, routes ...Route) {
 
 				for _, handler := range subRouteHandlers {
 					// Register the sub route onto the root route
-					registerRouterWithDescription(handler, rootRouter)
+					registerRoute(handler, rootRouter)
 				}
 			}
 		}

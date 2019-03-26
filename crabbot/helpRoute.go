@@ -31,17 +31,12 @@ func (h *Help) Handle(ctx *exrouter.Context) {
 	}
 }
 
-func (h *Help) GetRouteCommand() string {
+func (h *Help) GetCommand() string {
 	return "help"
 }
 
 func (h *Help) GetDescription() string {
 	return "prints this help menu"
-}
-
-func (h *Help) Register(router *exrouter.Route) *exrouter.Route {
-	h.router = router
-	return router.On(h.GetRouteCommand(), h.Handle)
 }
 
 func (h *Help) renderMarkDownTable() string {
@@ -67,10 +62,6 @@ func (h *Help) renderMarkDownTable() string {
 	return buffer.String()
 }
 
-func (h *Help) GetSubRoutes() []Route {
-	return nil
-}
-
-func NewHelp() *Help {
-	return &Help{}
+func NewHelp(router *exrouter.Route) *Help {
+	return &Help{router: router}
 }

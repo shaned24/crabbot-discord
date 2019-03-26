@@ -22,7 +22,7 @@ In a discord chat lets say you want your bot to respond to a `!ping` that was ty
 type Route interface {
 	Register(router *exrouter.Route) *exrouter.Route
 	Handle(ctx *exrouter.Context)
-	GetRouteCommand() string
+	GetCommand() string
 	GetDescription(router *exrouter.Route) string
 }
 ```
@@ -32,7 +32,7 @@ type Route interface {
 type PingRoute struct{}
 
 func (u *PingRoute) Register(router *exrouter.Route) *exrouter.Route {
-	return router.On(u.GetRouteCommand(), u.Handle)
+	return router.On(u.GetCommand(), u.Handle)
 }
 
 func (u *PingRoute) GetDescription(router *exrouter.Route) string {
@@ -43,7 +43,7 @@ func (u *PingRoute) Handle(ctx *exrouter.Context) {
 	ctx.Reply("Pong!")
 }
 
-func (u *PingRoute) GetRouteCommand() string {
+func (u *PingRoute) GetCommand() string {
 	return "ping"
 }
 

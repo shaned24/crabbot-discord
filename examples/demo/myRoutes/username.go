@@ -9,11 +9,15 @@ import (
 type User struct{}
 
 func (u *User) Register(router *exrouter.Route) *exrouter.Route {
-	return router.OnMatch("username", dgrouter.NewRegexMatcher("user(name)?"), u.Handle)
+	return router.OnMatch(u.GetCommand(), dgrouter.NewRegexMatcher("user(name)?"), u.Handle)
 }
 
 func (u *User) GetDescription() string {
 	return "returns the users username"
+}
+
+func (u *User) GetCommand() string {
+	return "username"
 }
 
 func (u *User) Handle(ctx *exrouter.Context) {
@@ -21,10 +25,6 @@ func (u *User) Handle(ctx *exrouter.Context) {
 	if err != nil {
 		log.Printf("Something went wrong: %v", err)
 	}
-}
-
-func (u *User) GetRouteCommand() string {
-	return "user(name)"
 }
 
 func NewUser() *User {

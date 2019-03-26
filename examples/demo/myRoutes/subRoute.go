@@ -8,10 +8,6 @@ import (
 
 type ExampleSubRoute struct{}
 
-func (u *ExampleSubRoute) Register(router *exrouter.Route) *exrouter.Route {
-	return router.On(u.GetRouteCommand(), u.Handle)
-}
-
 func (u *ExampleSubRoute) GetSubRoutes() []crabbot.Route {
 	return []crabbot.Route{
 		NewUser(),
@@ -29,7 +25,7 @@ func (u *ExampleSubRoute) Handle(ctx *exrouter.Context) {
 	}
 }
 
-func (u *ExampleSubRoute) GetRouteCommand() string {
+func (u *ExampleSubRoute) GetCommand() string {
 	return "sub"
 }
 

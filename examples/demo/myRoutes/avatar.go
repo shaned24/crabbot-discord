@@ -14,8 +14,8 @@ func (a *Avatar) GetDescription() string {
 	return avatarDescription
 }
 
-func (a *Avatar) Register(router *exrouter.Route) *exrouter.Route {
-	return router.On(avatarRoute, a.Handle)
+func (a *Avatar) GetCommand() string {
+	return avatarRoute
 }
 
 func (a *Avatar) Handle(ctx *exrouter.Context) {
@@ -23,10 +23,6 @@ func (a *Avatar) Handle(ctx *exrouter.Context) {
 	if err != nil {
 		log.Print("Something went wrong when handling Avatar request", err)
 	}
-}
-
-func (a *Avatar) GetRouteCommand() string {
-	return avatarRoute
 }
 
 func NewAvatar() *Avatar {
