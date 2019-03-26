@@ -18,12 +18,13 @@ In a discord chat lets say you want your bot to respond to a `!ping` that was ty
 
 #### Implement the `crabbot.Route` interface:
 ```go
-// Interface declaration
 type Route interface {
-	Register(router *exrouter.Route) *exrouter.Route
-	Handle(ctx *exrouter.Context)
-	GetCommand() string
-	GetDescription(router *exrouter.Route) string
+    GetCommand() string
+    GetDescription(router *exrouter.Route) string
+}
+
+type DefaultRouteHandler interface {
+    Handle(ctx *exrouter.Context)
 }
 ```
 
@@ -31,24 +32,20 @@ type Route interface {
 ```go
 type PingRoute struct{}
 
-func (u *PingRoute) Register(router *exrouter.Route) *exrouter.Route {
-	return router.On(u.GetCommand(), u.Handle)
-}
-
-func (u *PingRoute) GetDescription(router *exrouter.Route) string {
-	return "This will respond with Pong!"
-}
-
 func (u *PingRoute) Handle(ctx *exrouter.Context) {
-	ctx.Reply("Pong!")
+    ctx.Reply("Pong!")
 }
 
 func (u *PingRoute) GetCommand() string {
-	return "ping"
+    return "ping"
+}
+
+func (u *PingRoute) GetDescription(router *exrouter.Route) string {
+    return "This will respond with Pong!"
 }
 
 func NewPingRoute() *PingRoute {
-	return &PingRoute{}
+    return &PingRoute{}
 }
 ```
 
@@ -66,7 +63,7 @@ func main() {
     }
 
     defer bot.Close()
-    err = bot.Start()
+    _ = bot.Start()
     
     // Wait here until CTRL-C or other term signal is received.
     log.Println("Bot is now running. Press CTRL-C to exit.")
