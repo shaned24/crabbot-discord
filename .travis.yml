@@ -19,8 +19,7 @@ services:
 stages:
   - docker-build
   - docker-publish
-  - name: deploy
-    if: branch = master
+  - deploy
 
 jobs:
   include:
@@ -31,4 +30,5 @@ jobs:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - make docker-publish
     - stage: deploy
+      if: branch = master
       script: make deploy
