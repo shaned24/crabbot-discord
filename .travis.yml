@@ -1,13 +1,25 @@
+language: go
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -qq apt-transport-https
+  - curl -sL https://github.com/digitalocean/doctl/releases/download/v1.14.0/doctl-1.14.0-linux-amd64.tar.gz | tar -xzv
+  - chmod +x ./doctl
+  - sudo mv ./doctl /usr/local/bin/doctl
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  - curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh
+  - chmod 700 get_helm.sh
+  - sudo ./get_helm.sh
+
 services:
   - docker
-
-language: go
 
 stages:
   - docker-build
   - docker-publish
-#  - name: deploy
-#    if: branch = master
+  - deploy
 
 jobs:
   include:
@@ -17,3 +29,5 @@ jobs:
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - make docker-publish
+    - stage: deploy
+      script: make deploy
