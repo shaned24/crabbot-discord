@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/shaned24/crabbot-discord.svg?branch=master)](https://travis-ci.org/shaned24/crabbot-discord)
+
 # Crab Bot Dicord
 
 This library adds an interface to easily map routes to handlers

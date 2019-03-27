@@ -19,7 +19,8 @@ services:
 stages:
   - docker-build
   - docker-publish
-  - deploy
+  - name: deploy
+    if: branch = master
 
 jobs:
   include:
