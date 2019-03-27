@@ -26,6 +26,7 @@ jobs:
     - stage: docker-build
       script: make docker-build
     - stage: docker-publish
+      if: branch = master AND type IN (push)
       script:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - make docker-publish
