@@ -13,10 +13,10 @@ IFS=$'\n\t'
 doctl auth init --access-token $DO_TOKEN
 
 # Get the kubectl config
-doctl kubernetes cluster kubeconfig show $DO_CLUSTER_ID > ~/.kube/do.yaml
+doctl kubernetes cluster kubeconfig show $DO_CLUSTER_ID > ~/do.yaml
 
 # Set the configs
-export KUBECONFIG=~/.kube/config:~/.kube/do.yaml
+export KUBECONFIG=~/do.yaml
 
 echo "Initialising helm..."
 helm init --client-only
