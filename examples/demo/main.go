@@ -31,6 +31,7 @@ func main() {
 		myRoutes.NewAvatar(),
 		myRoutes.NewUser(),
 		myRoutes.NewDirectMessage(),
+		myRoutes.NewQueryInput(),
 	)
 
 	if err != nil {
